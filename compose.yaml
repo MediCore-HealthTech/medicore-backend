@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: medicore-postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME:-medicore}
+      POSTGRES_USER: ${DB_USERNAME:-medicore}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-medicore}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - medicore-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-medicore} -d ${DB_NAME:-medicore}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  medicore-postgres-data:
